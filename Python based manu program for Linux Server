@@ -1,0 +1,64 @@
+import subprocess
+
+def run_command(command, description):
+    """Execute a shell command and display the output."""
+    print(f"\n{description}...")
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, shell=True)
+        if result.returncode == 0:
+            print(result.stdout)
+        else:
+            print(f"Error: {result.stderr}")
+    except Exception as e:
+        print(f"Something went wrong: {e}")
+
+def check_disk_usage():
+    """Check disk usage using 'df -kh'."""
+    run_command("df -kh", "Checking Disk Usage")
+
+def check_date():
+    """Check current date and time using 'date'."""
+    run_command("date", "Getting Current Date and Time")
+
+def check_uptime():
+    """Check system uptime using 'uptime'."""
+    run_command("uptime", "Checking System Uptime")
+
+def list_processes():
+    """List running processes using 'ps aux'."""
+    run_command("ps aux | head -10", "Listing Running Processes (Top 10)")
+
+def check_memory_usage():
+    """Check memory usage using 'free -h'."""
+    run_command("free -h", "Checking Memory Usage")
+
+def show_menu():
+    """Display menu options."""
+    while True:
+        print("\n--- Linux Server Monitoring Menu ---")
+        print("1. Check Disk Usage")
+        print("2. Get Current Date and Time")
+        print("3. Check System Uptime")
+        print("4. List Running Processes (Top 10)")
+        print("5. Check Memory Usage")
+        print("6. Exit")
+
+        choice = input("Choose an option (1-6): ")
+        if choice == '1':
+            check_disk_usage()
+        elif choice == '2':
+            check_date()
+        elif choice == '3':
+            check_uptime()
+        elif choice == '4':
+            list_processes()
+        elif choice == '5':
+            check_memory_usage()
+        elif choice == '6':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    show_menu()
