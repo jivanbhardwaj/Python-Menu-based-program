@@ -1,0 +1,67 @@
+import subprocess
+
+def run_docker_command(command, description):
+    """Executes a Docker command and prints the output."""
+    print(f"\n{description}...")
+    try:
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(result.stdout)
+        else:
+            print(f"Error: {result.stderr}")
+    except Exception as e:
+        print(f"Something went wrong: {e}")
+
+def list_containers():
+    """List all containers (running and stopped)."""
+    run_docker_command(['docker', 'ps', '-a'], "Listing all Docker containers")
+
+def create_container(image_name):
+    """Create a Docker container from an image."""
+    run_docker_command(['docker', 'run', '-d', image_name], f"Creating a container from the '{image_name}' image")
+
+def start_container(container_id):
+    """Start a Docker container."""
+    run_docker_command(['docker', 'start', container_id], f"Starting container '{container_id}'")
+
+def stop_container(container_id):
+    """Stop a running Docker container."""
+    run_docker_command(['docker', 'stop', container_id], f"Stopping container '{container_id}'")
+
+def remove_container(container_id):
+    """Remove a stopped Docker container."""
+    run_docker_command(['docker', 'rm', container_id], f"Removing container '{container_id}'")
+
+def show_menu():
+    while True:
+        print("\n--- Docker Container Menu ---")
+        print("1. List Containers")
+        print("2. Create Container")
+        print("3. Start Container")
+        print("4. Stop Container")
+        print("5. Remove Container")
+        print("6. Exit")
+
+        choice = input("Choose an option (1-6): ")
+        if choice == '1':
+            list_containers()
+        elif choice == '2':
+            image_name = input("Enter the image name to create a container: ")
+            create_container(image_name)
+        elif choice == '3':
+            container_id = input("Enter the container ID to start: ")
+            start_container(container_id)
+        elif choice == '4':
+            container_id = input("Enter the container ID to stop: ")
+            stop_container(container_id)
+        elif choice == '5':
+            container_id = input("Enter the container ID to remove: ")
+            remove_container(container_id)
+        elif choice == '6':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    show_menu()
