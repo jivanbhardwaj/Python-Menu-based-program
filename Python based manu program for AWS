@@ -1,0 +1,57 @@
+import subprocess
+
+def run_aws_command(command, description):
+    """Runs an AWS CLI command and shows the output."""
+    print(f"\n{description}...")
+    try:
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(result.stdout)
+        else:
+            print(f"Error: {result.stderr}")
+    except Exception as e:
+        print(f"Something went wrong: {e}")
+
+def list_s3_buckets():
+    run_aws_command(['aws', 's3', 'ls'], "Fetching S3 buckets")
+
+def list_ec2_instances():
+    run_aws_command(
+        ['aws', 'ec2', 'describe-instances', '--query', 'Reservations[].Instances[].InstanceId'],
+        "Fetching EC2 instance IDs"
+    )
+
+def create_s3_bucket():
+    bucket_name = input("Enter a name for the new S3 bucket: ")
+    run_aws_command(['aws', 's3', 'mb', f's3://{bucket_name}'], f"Creating S3 bucket '{bucket_name}'")
+
+def delete_s3_bucket():
+    bucket_name = input("Enter the name of the S3 bucket to delete: ")
+    run_aws_command(['aws', 's3', 'rb', f's3://{bucket_name}', '--force'], f"Deleting S3 bucket '{bucket_name}'")
+
+def show_menu():
+    while True:
+        print("\n--- AWS CLI Menu ---")
+        print("1. List S3 Buckets")
+        print("2. List EC2 Instances")
+        print("3. Create S3 Bucket")
+        print("4. Delete S3 Bucket")
+        print("5. Exit")
+
+        choice = input("Choose an option (1-5): ")
+        if choice == '1':
+            list_s3_buckets()
+        elif choice == '2':
+            list_ec2_instances()
+        elif choice == '3':
+            create_s3_bucket()
+        elif choice == '4':
+            delete_s3_bucket()
+        elif choice == '5':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    show_menu()
